@@ -1,9 +1,9 @@
 ---
 layout: page
 title: Sub1
-permalink: /part1/sub1
+permalink: /Introduction/sub1
 nav_order: 1
-parent: Part1
+parent: Introduction
 
 ---
 
