@@ -97,6 +97,28 @@ endmodule
 
 `module mkExample(Example);`{:.language-bluespec .highlight}
 
+<div style="display: flex; align-items: center;">
+  <div style="flex: 70%;">
+ <h3>综合流程</h3>
+
+<p>综合是硬件设计流程中的关键步骤，尤其在 FPGA 和 ASIC 流程中。典型的 FPGA 流程包括以下步骤：</p>
+
+<ol>
+    <li><strong>RTL 设计</strong>：首先编写 RTL 代码，进行初步仿真（RTL Sim）。</li>
+    <li><strong>综合（Synthesis）</strong>：RTL 代码经过综合工具转化为门级网表。</li>
+    <li><strong>布线规划与路由（Place and Route）</strong>：在通过综合之后，工具会规划芯片上不同模块的布局，并连接它们。</li>
+    <li><strong>提取与后仿真（Post-P&amp;R Sim）</strong>：在实际布局与布线后，进行仿真验证，确保设计符合预期。</li>
+    <li><strong>制造（Fabrication）</strong>：通过所有验证后，最终进入制造阶段。</li>
+</ol>
+
+<p>该流程确保设计的正确性和可实现性，从仿真到硬件实现都保持一致性。</p>
+
+  </div>
+  <div style="flex: 30%;">
+    <img src="{{ site.baseurl }}/docs/assets/image-20240905090404416.png" alt="image-20240905090404416" style="zoom:80%;" >
+  </div>
+</div>
+
 ---
 <button class="btn js-toggle-dark-mode">Preview dark color scheme</button>
 
