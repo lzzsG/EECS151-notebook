@@ -12,7 +12,7 @@ nav_order: 4
 
 # Lecture 4 Verilog II
 
-## Review
+# Review
 
 在芯片设计中，有几个关键的**设计指标（Design Metrics）**需要考虑，这些指标直接影响芯片的性能、成本和功耗：
 
@@ -21,13 +21,11 @@ nav_order: 4
 - **性能（Performance）**：衡量芯片的处理速度和效率，尤其是在关键应用场景中。
 - **功耗与能效（Power and Energy）**：衡量芯片在工作期间的能耗，特别是在移动设备和大规模计算中，低功耗设计尤为重要。
 
-### Verilog 简介
+## Verilog 
 
 Verilog 是一种硬件描述语言（HDL），用于描述和设计硬件电路。它的核心功能是通过代码来描述电路的结构和行为。Verilog 可以通过**逻辑综合（Logic Synthesis）**将代码转换为**门级网表（Gate-level Netlists）**，用于实际的硬件实现。Verilog 被广泛应用于 ASIC（专用集成电路）和 FPGA（现场可编程门阵列）设计中。
 
 - **Verilog Assign 语句**：这是 Verilog 中最常用的语句之一，用于定义组合逻辑，表示一个信号持续地分配给另一个信号。
-
-## Verilog Introduction
 
 ### Verilog 模块定义
 
@@ -49,7 +47,7 @@ Verilog 是一种硬件描述语言（HDL），用于描述和设计硬件电路
 
 通过构建模块的层次结构，设计人员可以管理复杂的系统设计。顶层模块通常代表整个设计或设计测试环境。在实际设计中，多个子模块可以被实例化并组合成更高级别的模块。这种方法有助于减少代码的复杂度，同时提高设计的可复用性。
 
-
+...
 
 ## Continuous Assignment Examples
 
@@ -84,16 +82,23 @@ wire r, a, cout, cin;
 - **算术运算符**：在信号上执行加法、乘法等操作，注意硬件代价。
 - **拼接与符号扩展**：使用大括号 `{}` 进行位的拼接，或者符号扩展。
 
+---
+
+# Continue Verilog
+
 ## Non-Continuous Assignments
 
 在 Verilog 中，**非连续赋值（Non-Continuous Assignment）** 使用 `always` 块来实现，它显示了 Verilog 作为仿真语言的根源。这种赋值方式在硬件设计的角度上有些特殊，因为它并非持续监控信号，而是根据触发条件进行操作。
 
-### 示例代码
+![image-20240905104556024]({{ site.baseurl }}/docs/assets/image-20240905104556024.png)
+
+###  `always` 块示例代码
 
 ```verilog
 module and_or_gate (out, in1, in2, in3);
     input in1, in2, in3;
-    output reg out;  // 使用 reg 声明，不是寄存器，仅表示可以在 always 块内赋值
+    output out; 
+    reg out;  // 使用 reg 声明但不是寄存器，仅表示可以在 always 块内赋值
     
     always @(in1 or in2 or in3) begin  // 在信号 in1, in2, in3 改变时触发
         out = (in1 & in2) | in3;       // 逻辑操作：先与后或
@@ -107,6 +112,8 @@ endmodule
 - **敏感列表（sensitivity list）**：`always` 块的执行取决于敏感列表中的信号变化。当 `in1`、`in2` 或 `in3` 发生变化时，`always` 块内部的逻辑会被执行。
 - **赋值方式**：在 `always` 块内部，使用等号 `=` 进行阻塞赋值（blocking assignment），这种赋值方式在 `always` 块内的执行顺序严格按照代码顺序。
 
+![image-20240905104723086]({{ site.baseurl }}/docs/assets/image-20240905104723086.png)
+
 ### 与连续赋值的比较：
 
 与连续赋值的 `assign` 语句相比，`always` 块的赋值在硬件设计中稍显复杂。`assign` 语句适用于组合逻辑的建模，始终保持信号同步，而 `always` 块更适合用于模拟时序逻辑或复杂的状态机。
@@ -119,7 +126,9 @@ endmodule
 
 在 Verilog 中，**always 块** 允许我们实现一些在连续赋值语句中难以完成的逻辑构造，特别是在处理复杂条件判断或时序逻辑时。`always` 块提供了更大的灵活性，使得设计者可以使用 `case` 或 `if-else` 结构进行更细粒度的控制。
 
-### Case Statement Example
+## Case Statement Example
+
+![image-20240905105031597]({{ site.baseurl }}/docs/assets/image-20240905105031597.png)
 
 在这个例子中，`always` 块结合 `case` 语句，实现了一个 4:1 多路复用器（MUX）的逻辑。根据 `select` 信号的不同值，`out` 会选择 `in0` 到 `in3` 中的一个作为输出。
 
@@ -150,11 +159,11 @@ endmodule
 
 虽然嵌套的 `if-else` 语句可以实现类似的逻辑，但 `case` 语句更为简洁和清晰。在硬件电路中，`case` 语句会被综合成平衡的多路选择器，而 `if-else` 语句有时可能被综合成带优先级的逻辑，导致不同输入信号的延迟不一致。
 
----
-
-### Nested if-else Example
+## Nested if-else Example
 
 接下来，我们看看使用嵌套的 `if-else` 语句来实现同样的多路复用器逻辑。`if-else` 语句可以用来逐个检查条件，并根据匹配的条件执行相应的赋值操作。
+
+![QQ_1725504879154]({{ site.baseurl }}/docs/assets/QQ_1725504879154.png)
 
 ```verilog
 module mux4 (in0, in1, in2, in3, select, out);
@@ -180,22 +189,20 @@ endmodule
 - **嵌套 `if-else`**：通过多级条件检查来实现逻辑判断，每个 `else if` 分支用于处理一种情况。
 - **优先级逻辑（priority logic）**：嵌套的 `if-else` 语句会导致优先级逻辑结构，即不同的输入信号会有不同的传输延迟。比如 `in0` 的传输延迟会比 `in3` 短，因为它更早被检查到。
 
-### Case vs If-else
+### 总结 Case vs If-else
 
 - **`case` 语句**：所有输入信号的延迟是相同的，信号被并行地处理。这种平衡的逻辑适合实现多路复用器等场景，且代码更易于维护。
 - **嵌套 `if-else` 语句**：这种结构会产生优先级逻辑，可能导致某些输入的传输延迟较大，尤其在复杂的条件判断中。例如，`in3` 的延迟会比 `in0` 长，因为它在最后一个条件中被检查到。
-
-### 总结
 
 在 Verilog 设计中，`always` 块提供了极大的灵活性，允许我们使用 `case` 和 `if-else` 结构进行逻辑判断。使用 `case` 语句时，所有输入信号的传输延迟相同，更适合多路复用器的实现。而 `if-else` 结构则适用于需要优先级逻辑的场景，但要注意不同条件下的延迟差异。
 
 
 
-
-
 ## Ripple-Carry Adder Example
 
-**Ripple-Carry Adder（波纹进位加法器）** 是一种常见的多位二进制加法器，通过将多个 **全加器（Full Adder, FA）** 级联，每个全加器处理一位的加法并将进位传递到下一位。这种设计比较简单，但由于进位需要逐位传递，可能会导致延迟较大，特别是在位数较多时。
+上节课提到的**Ripple-Carry Adder（波纹进位加法器）** 是一种常见的多位二进制加法器，通过将多个 **全加器（Full Adder, FA）** 级联，每个全加器处理一位的加法并将进位传递到下一位。这种设计比较简单，但由于进位需要逐位传递，可能会导致延迟较大，特别是在位数较多时。
+
+![image-20240905105959775]({{ site.baseurl }}/docs/assets/image-20240905105959775.png)
 
 ### Full Adder 模块
 
@@ -234,6 +241,8 @@ endmodule
 ## Ripple Adder Generator Example
 
 为了更灵活地处理不同位宽的加法器设计，Verilog 提供了 **参数化设计（Parameterized Design）**，允许通过参数来控制设计中的位宽等关键因素。通过 `generate` 语句，我们可以利用 `for` 循环自动生成多个 `FullAdder` 实例，从而动态地创建不同位宽的加法器。
+
+![image-20240905110029895]({{ site.baseurl }}/docs/assets/image-20240905110029895.png)
 
 ### 参数化的 Adder 模块
 
@@ -277,7 +286,7 @@ Adder #(N=64) adder64 (.A(A64), .B(B64), .R(R64));  // 64 位的加法器实例
 
 ## Simplified Verilog Guidelines for Combinational Logic
 
-在 Verilog 中，设计组合逻辑有两种常见的方法：**连续赋值（Continuous Assignment）**和**`always` 块**。这两种方法在处理组合逻辑时都很常见，但它们的适用场景和语法稍有不同。
+总结，在 Verilog 中，设计组合逻辑有两种常见的方法：**连续赋值（Continuous Assignment）**和**`always` 块**。这两种方法在处理组合逻辑时都很常见，但它们的适用场景和语法稍有不同。
 
 ### Continuous Assignment
 
@@ -303,8 +312,6 @@ end
 - **`assign`** 语句用于简单的组合逻辑，通常对 `wire` 类型信号进行赋值。
 - **`always` 块** 则用于复杂的逻辑判断或组合逻辑操作，通常对 `reg` 类型信号赋值。
   
----
-
 ## Are These Combinational Circuits Correct?
 
 ### Example A: 3-Input Adder
@@ -387,8 +394,6 @@ end
 
 ## Administrivia
 
-在这部分，课程管理的细节被简要提及，帮助学生跟上课程节奏：
-
 - **Homework 1**：今天发布，需要及时开始处理。
 - **讨论课**：本周讨论课开始，建议积极参与，与同学们互动。
 - **FPGA 实验课**：
@@ -397,28 +402,34 @@ end
 
 ---
 
-## Verilog Overview
 
-Verilog 是一门用于硬件设计的描述语言，支持组合逻辑和时序逻辑的建模。在这一部分，简要概述了 Verilog 中的重要概念。
 
-### 组合逻辑（Combinational Circuits）
 
-组合逻辑的输出只与当前输入有关，而不涉及存储或状态。Verilog 中的组合逻辑可以使用以下方式描述：
 
-- **Assign 语句**：用于定义简单的组合逻辑。
-- **Always 块**：允许更复杂的逻辑结构，使用 `case` 或 `if-else` 语句来进行条件判断。
-- **生成器（Generator）**：用于生成重复的逻辑模块，如波纹加法器中的全加器实例。
+# Sequential Circuits
 
-### 时序逻辑（Sequential Circuits）
+<div style="display: flex; align-items: center;">
+  <div style="flex: 60%;">
+<h3>时序逻辑概要</h3>
 
-时序逻辑不仅依赖于当前输入，还依赖于电路的状态。在同步电路中，状态由时钟驱动更新。Verilog 支持使用锁存器（Latches）和触发器（Flip-Flops）来实现状态存储。重要概念包括：
+<p>时序逻辑不仅依赖于当前输入，还依赖于电路的状态。在同步电路中，状态由时钟驱动更新。Verilog 支持使用锁存器（Latches）和触发器（Flip-Flops）来实现状态存储。重要概念包括：</p>
 
-- **锁存器和触发器（Latches and Flip-Flops）**：用于存储电路状态。
-- **Always 块**：在时序逻辑中，`always` 块用于描述触发器，敏感列表包括时钟信号。
-- **敏感列表（Sensitivity List）**：定义在信号何时发生变化时执行 `always` 块。
-- **阻塞与非阻塞赋值（Blocking vs Nonblocking Assignment）**：用于区分组合逻辑和时序逻辑的不同赋值方式。
+<ul>
+    <li><strong>锁存器和触发器（Latches and Flip-Flops）</strong>：用于存储电路状态。</li>
+    <li><strong>Always 块</strong>：在时序逻辑中，<code>always</code> 块用于描述触发器，敏感列表包括时钟信号。</li>
+    <li><strong>敏感列表（Sensitivity List）</strong>：定义在信号何时发生变化时执行 <code>always</code> 块。</li>
+    <li><strong>阻塞与非阻塞赋值（Blocking vs Nonblocking Assignment）</strong>：用于区分组合逻辑和时序逻辑的不同赋值方式。</li>
+</ul>
 
----
+  </div>
+
+  <div style="flex: 40%;">
+   <img src="{{ site.baseurl }}/docs/assets/image-20240905111306590.png" alt="image-20240905111306590" style="zoom:80%;" />
+  </div>
+
+</div>
+
+
 
 ## Sequential Logic
 
@@ -434,17 +445,17 @@ Verilog 是一门用于硬件设计的描述语言，支持组合逻辑和时序
 
 3. **时钟驱动**：在同步数字系统中，状态的更新由时钟信号控制。每当时钟信号发生变化时，电路会根据当前输入和状态进行更新。
 
-### 示例图解：
+![image-20240905112052487]({{ site.baseurl }}/docs/assets/image-20240905112052487.png)
+
 如图所示，电路的输入为 `A`, `B`, `C`，输出是 `F(A, B, C, State)`，这表明输出不仅取决于当前的输入，还取决于电路的状态。状态（State）由电路中的触发器或锁存器存储，并在时钟脉冲到来时更新。
 
-### 总结：
 时序逻辑通过存储历史信息来影响电路行为，适用于需要存储数据或历史状态的场景。通过锁存器和触发器，电路可以记忆之前的输入，并在下一个时钟周期更新状态。这种机制是现代数字电路设计的基础。
-
-
 
 ## Timing
 
 **触发器时序（Flip-flop Timing）** 是时序逻辑设计中的关键概念，它决定了数据在时钟信号下的流动。在这里，我们讨论的是 **D 触发器**，这种触发器的输出 `Q` 会在时钟上升沿（或下降沿）时更新为输入 `D` 的值。
+
+![image-20240905112242769]({{ site.baseurl }}/docs/assets/image-20240905112242769.png)
 
 ### Flip-flop 时序：
 
@@ -453,19 +464,21 @@ Verilog 是一门用于硬件设计的描述语言，支持组合逻辑和时序
 
 时序延迟非常重要，因为它影响了电路的最大时钟频率。要确保电路能够在给定的时钟频率下正确工作，触发器的时序特性需要在设计中被准确计算和考虑。
 
----
-
 ## Register
 
 **寄存器（Register）** 是由多个触发器组成的存储单元，它用于同步存储多位数据。典型的寄存器由一组 D 触发器组成，每个位对应一个触发器，通过时钟信号控制数据的存储和更新。
 
 ### 4-bit Register
 
+![image-20240905112415787]({{ site.baseurl }}/docs/assets/image-20240905112415787.png)
+
 - 该寄存器包含 **4 个 D 触发器**，每个触发器存储一位数据（In[0] 到 In[3]）。
 - **时钟信号 Clk** 控制所有触发器同步更新输入数据，并将其输出到 Out[0] 到 Out[3]。
 - 在时钟上升沿时，寄存器会将输入的 4 位数据同步存储，并在下一时钟周期之前保持输出不变。
 
 ### Accumulator
+
+![QQ_1725506860912]({{ site.baseurl }}/docs/assets/QQ_1725506860912.png)
 
 **累加器（Accumulator）** 是一种特殊类型的寄存器，它的作用是在时钟的每个周期内将输入值与寄存器中的当前值进行相加，并将结果存储回寄存器。
 
@@ -483,6 +496,8 @@ Verilog 是一门用于硬件设计的描述语言，支持组合逻辑和时序
 ### D 触发器与同步设置和复位（D-flip-flop with synchronous set and reset）
 
 以下是一个带有同步设置（set）和复位（reset）的 D 触发器的 Verilog 实现：
+
+![image-20240905113158699]({{ site.baseurl }}/docs/assets/image-20240905113158699.png)
 
 ```verilog
 module dff(q, d, clk, set, rst);
@@ -503,11 +518,11 @@ endmodule
 - **关键字 `posedge`**：该语句表示在时钟的上升沿触发行为。`always @(posedge clk)` 意味着该块将在每次时钟上升沿时执行。
 - **优先级逻辑**：在这个实现中，复位信号 `rst` 优先级最高，接着是设置信号 `set`，最后是输入信号 `d`。这意味着当 `rst` 为高时，q 无论其他信号为何，都会被置为 0；当 `rst` 为低且 `set` 为高时，q 被置为 1。
 
----
-
 ## The Sequential always Block
 
 Verilog 中的 `always` 块可以用于描述两类逻辑：**组合逻辑** 和 **时序逻辑**。这两种逻辑的区别在于是否依赖时钟信号。
+
+![image-20240905113248316]({{ site.baseurl }}/docs/assets/image-20240905113248316.png)
 
 ### 组合逻辑 always 块
 
@@ -526,6 +541,8 @@ endmodule
 
 - **`always @(*)`**：`(*)` 表示该 `always` 块对所有输入信号的变化敏感，任何信号变化都会触发该块执行。这里的输出 `out` 是组合逻辑的结果，它没有任何存储状态。
 
+![image-20240905113643842]({{ site.baseurl }}/docs/assets/image-20240905113643842.png)
+
 ### 时序逻辑 always 块
 
 时序逻辑依赖时钟信号，在每次时钟边沿时执行逻辑。例如：
@@ -542,8 +559,6 @@ endmodule
 ```
 
 - **`always @(posedge clk)`**：时序逻辑通常基于时钟信号的上升沿或下降沿触发。此处的 `out` 会在每次时钟上升沿时根据选择信号 `sel` 决定是否赋值为 `a` 或 `b`。这种类型的逻辑会存储先前的状态。
-
----
 
 ### 组合逻辑与时序逻辑的比较
 
@@ -568,7 +583,7 @@ endmodule
 - **行为**：阻塞赋值会立即进行评估和赋值操作。在一个 `always` 块中，当前语句的执行会阻塞后续语句，直到完成赋值。
 - **语法**：使用 `=` 进行赋值。
 
-#### 示例：
+示例：
 
 ```verilog
 always @(*) begin
@@ -597,13 +612,11 @@ end
 
 在这个例子中，所有的右侧表达式会立即被评估，但赋值操作会推迟到时间步结束时同时进行。因此，`x`、`y`、`z` 的赋值不会相互干扰。
 
----
-
-### Assignment Styles for Sequential Logic
+## Assignment Styles for Sequential Logic
 
 **阻塞赋值和非阻塞赋值** 在时序逻辑设计中有重要的应用场景，特别是在触发器（flip-flop）的设计中。正确使用这两种赋值方式可以避免时序问题和逻辑错误。
 
-#### 阻塞赋值（Blocking Assignment）
+### 阻塞赋值（Blocking Assignment）
 
 在时序逻辑中使用阻塞赋值会导致先赋值的信号立即影响后续信号。以下是使用阻塞赋值的例子：
 
@@ -623,7 +636,7 @@ endmodule
 
 - 这种赋值方式可能导致在同一个时钟周期内，变量的值变化会影响后续的变量。对于时序逻辑，使用阻塞赋值时需要非常小心，以避免逻辑错误。
 
-#### 非阻塞赋值（Nonblocking Assignment）
+### 非阻塞赋值（Nonblocking Assignment）
 
 在时序逻辑中，非阻塞赋值更常用，因为它能避免同一时间步内的干扰，确保赋值顺序的一致性：
 
@@ -643,14 +656,7 @@ endmodule
 
 - 非阻塞赋值保证了所有赋值在时钟周期结束时同时进行。这避免了赋值链中的先后关系问题，使得设计更具时序稳定性。
 
-### 总结
-
-- **阻塞赋值（Blocking Assignment）**：立即进行赋值，适用于组合逻辑，但在时序逻辑中应谨慎使用。
-- **非阻塞赋值（Nonblocking Assignment）**：推迟赋值到时间步结束时，确保时序逻辑的正确性，更适合触发器和寄存器的设计。
-
 在时序逻辑设计中，推荐使用**非阻塞赋值**来避免时序上的不一致性，确保所有寄存器在同一时间步内同步更新。
-
-
 
 ## Use Nonblocking for Sequential Logic
 
@@ -689,9 +695,7 @@ end
 
 在**时序逻辑**中，应始终使用 **非阻塞赋值 (`<=`)**，避免使用阻塞赋值。非阻塞赋值可以正确模拟寄存器级联的行为，并保持逻辑的同步性。
 
----
-
-## Simplified Verilog Guidelines
+## Simplified Verilog Guidelines2
 
 在设计 Verilog 代码时，以下是两类逻辑的简化指南：
 
@@ -754,16 +758,12 @@ end
 - **小心网络上的资源**：互联网上的 Verilog 示例不一定可靠，很多错误的例子可能导致误解。
 - 在整个学期中，会逐步引入更多有用的 Verilog 语法和设计技巧，帮助学生深入了解硬件设计。
 
----
-
 ## Final Thoughts on Verilog Examples
 
 数字设计中的重要部分是学会如何用 Verilog 代码表达你所需的电路。
 
 - **首先理解电路**：在编写 Verilog 代码之前，确保你对所需的电路结构有清晰的理解。
 - **Verilog 只是工具**：用 Verilog 描述硬件时，编码只是其中的一部分，关键是对电路行为和逻辑的理解。如果没有清晰的电路模型和设计思路，编写 Verilog 代码时会遇到困难。
-
----
 
 ## Review
 
